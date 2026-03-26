@@ -32,7 +32,10 @@ export function LeadCaptureForm({ onSuccess }: LeadCaptureFormProps) {
     e.preventDefault();
 
     if (!formData.name || !formData.email || !formData.company) {
-      toast.error('Please fill in all required fields');
+      toast.error('Please fill in all required fields', {
+        position: 'top-right',
+        duration: 1500
+      });
       return;
     }
 
@@ -108,7 +111,7 @@ export function LeadCaptureForm({ onSuccess }: LeadCaptureFormProps) {
           onChange={handleChange}
           placeholder="John Doe"
           disabled={isLoading}
-          className="bg-white/10 backdrop-blur-md border-primary/13 text-white placeholder:text-gray-500 hover:bg-white/15 hover:border-primary/30 hover:shadow-sm focus:border-primary"
+          className="bg-white/10 backdrop-blur-md border-primary/13 text-white placeholder:text-muted-foreground hover:bg-white/15 hover:border-primary/30 hover:shadow-sm focus:border-primary"
         />
       </div>
 
@@ -125,7 +128,7 @@ export function LeadCaptureForm({ onSuccess }: LeadCaptureFormProps) {
           onChange={handleChange}
           placeholder="john@example.com"
           disabled={isLoading}
-          className="bg-white/10 backdrop-blur-md border-primary/13 text-white placeholder:text-gray-400 hover:bg-white/15 hover:border-primary/30 hover:shadow-sm focus:border-primary"
+          className="bg-white/10 backdrop-blur-md border-primary/13 text-white placeholder:text-muted-foreground hover:bg-white/15 hover:border-primary/30 hover:shadow-sm focus:border-primary"
         />
       </div>
 
@@ -141,7 +144,7 @@ export function LeadCaptureForm({ onSuccess }: LeadCaptureFormProps) {
           onChange={handleChange}
           placeholder="Your Company"
           disabled={isLoading}
-          className="bg-white/10 backdrop-blur-md border-primary/13 text-white placeholder:text-gray-400 hover:bg-white/20 hover:border-primary/40 hover:shadow-sm focus:border-primary"
+          className="bg-white/10 backdrop-blur-md border-primary/13 text-white placeholder:text-muted-foreground hover:bg-white/20 hover:border-primary/40 hover:shadow-sm focus:border-primary"
         />
       </div>
 

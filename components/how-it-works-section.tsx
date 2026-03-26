@@ -83,7 +83,7 @@ export function HowItWorksSection() {
         {/* Technology Stack */}
         <div className="mt-20 md:mt-32 p-8 md:p-12 rounded-2xl bg-white/10 backdrop-blur-md border border-grey-20 translate-x-25 shadow-sm">
           <h3 className="text-2xl font-bold mb-6 text-foreground text-center">Technology Stack</h3>
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-4 gap-8">
             <div className="text-center">
               <p className="text-sm text-muted-foreground mb-2">LLM Model</p>
               <p className="font-semibold text-foreground text-lg">Llama 2</p>
@@ -91,6 +91,10 @@ export function HowItWorksSection() {
             <div className="text-center">
               <p className="text-sm text-muted-foreground mb-2">Retrieval Method</p>
               <p className="font-semibold text-foreground text-lg">RAG + Embeddings</p>
+            </div>
+            <div className="text-center">
+              <p className="text-sm text-muted-foreground mb-2">Frontend</p>
+              <p className="font-semibold text-foreground text-lg">Next.js</p>
             </div>
             <div className="text-center">
               <p className="text-sm text-muted-foreground mb-2">Backend</p>

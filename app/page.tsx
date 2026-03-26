@@ -150,7 +150,7 @@ export default function Home() {
                 </p>
               </div>
 
-              <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-8 md:p-12">
+              <div className="bg-white/10 backdrop-blur-md border border-primary/20 rounded-2xl p-8 md:p-12 shadow-sm">
                 <ContactForm />
               </div>
             </div>
