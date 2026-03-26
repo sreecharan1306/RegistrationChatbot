@@ -77,7 +77,7 @@ export function ContactForm() {
           onChange={handleChange}
           placeholder="Your name"
           disabled={isLoading}
-          className="bg-white/10 backdrop-blur-md border-primary/13 text-white placeholder:text-muted-foreground focus:border-primary hover:bg-white/15 hover:border-primary/30 hover:shadow-sm"
+          className="bg-white/10 backdrop-blur-md border-primary/13 text-black placeholder:text-muted-foreground focus:border-primary hover:bg-white/15 hover:border-primary/30 hover:shadow-sm"
         />
       </div>
 
@@ -93,7 +93,7 @@ export function ContactForm() {
           onChange={handleChange}
           placeholder="your@email.com"
           disabled={isLoading}
-          className="bg-white/10 backdrop-blur-md border-primary/13 text-white placeholder:text-muted-foreground focus:border-primary hover:bg-white/15 hover:border-primary/30 hover:shadow-sm"
+          className="bg-white/10 backdrop-blur-md border-primary/13 text-black placeholder:text-muted-foreground focus:border-primary hover:bg-white/15 hover:border-primary/30 hover:shadow-sm"
         />
       </div>
 
