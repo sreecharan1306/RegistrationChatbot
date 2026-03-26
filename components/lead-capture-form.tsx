@@ -99,7 +99,7 @@ export function LeadCaptureForm({ onSuccess }: LeadCaptureFormProps) {
       {/* Name */}
       <div>
         <label htmlFor="name" className="block text-sm font-medium text-foreground mb-2">
-          Full Name *
+          Full Name <span className="text-red-400">*</span>
         </label>
         <Input
           id="name"
@@ -108,14 +108,14 @@ export function LeadCaptureForm({ onSuccess }: LeadCaptureFormProps) {
           onChange={handleChange}
           placeholder="John Doe"
           disabled={isLoading}
-          className="bg-white/10 backdrop-blur-md border-white/20 text-white placeholder:text-white/50 focus:border-primary"
+          className="bg-white/10 backdrop-blur-md border-primary/13 text-white placeholder:text-gray-500 hover:bg-white/15 hover:border-primary/30 hover:shadow-sm focus:border-primary"
         />
       </div>
 
       {/* Email */}
       <div>
         <label htmlFor="email" className="block text-sm font-medium text-foreground mb-2">
-          Email Address *
+          Email Address <span className="text-red-400">*</span>
         </label>
         <Input
           id="email"
@@ -125,14 +125,14 @@ export function LeadCaptureForm({ onSuccess }: LeadCaptureFormProps) {
           onChange={handleChange}
           placeholder="john@example.com"
           disabled={isLoading}
-          className="bg-white/10 backdrop-blur-md border-white/20 text-white placeholder:text-white/50 focus:border-primary"
+          className="bg-white/10 backdrop-blur-md border-primary/13 text-white placeholder:text-gray-400 hover:bg-white/15 hover:border-primary/30 hover:shadow-sm focus:border-primary"
         />
       </div>
 
       {/* Company */}
       <div>
         <label htmlFor="company" className="block text-sm font-medium text-foreground mb-2">
-          Company *
+          Company <span className="text-red-400">*</span>
         </label>
         <Input
           id="company"
@@ -141,7 +141,7 @@ export function LeadCaptureForm({ onSuccess }: LeadCaptureFormProps) {
           onChange={handleChange}
           placeholder="Your Company"
           disabled={isLoading}
-          className="bg-white/10 backdrop-blur-md border-white/20 text-white placeholder:text-white/50 focus:border-primary"
+          className="bg-white/10 backdrop-blur-md border-primary/13 text-white placeholder:text-gray-400 hover:bg-white/20 hover:border-primary/40 hover:shadow-sm focus:border-primary"
         />
       </div>
 
@@ -155,6 +155,7 @@ export function LeadCaptureForm({ onSuccess }: LeadCaptureFormProps) {
             setFormData(prev => ({ ...prev, isRecruiter: checked as boolean, receiveUpdates: false }))
           }
           disabled={isLoading}
+          className="border-primary/16"
         />
         <label
           htmlFor="isRecruiter"
@@ -166,7 +167,7 @@ export function LeadCaptureForm({ onSuccess }: LeadCaptureFormProps) {
 
       {/* Receive Updates Checkbox - Only for Recruiters */}
       {formData.isRecruiter && (
-        <div className="flex items-center space-x-3 p-3 bg-primary/10 rounded-lg border border-primary/20">
+        <div className="flex items-center space-x-3 p-3 bg-primary/10 rounded-lg border border-white/20">
           <Checkbox
             id="receiveUpdates"
             name="receiveUpdates"
@@ -175,6 +176,7 @@ export function LeadCaptureForm({ onSuccess }: LeadCaptureFormProps) {
               setFormData(prev => ({ ...prev, receiveUpdates: checked as boolean }))
             }
             disabled={isLoading}
+            className='border-primary/15'
           />
           <label
             htmlFor="receiveUpdates"
@@ -193,6 +195,7 @@ export function LeadCaptureForm({ onSuccess }: LeadCaptureFormProps) {
       >
         {isLoading ? 'Submitting...' : 'Get Started'}
       </Button>
+
     </form>
   );
 }
