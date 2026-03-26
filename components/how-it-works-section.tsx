@@ -39,7 +39,7 @@ export function HowItWorksSection() {
 
       <div className="container px-4 max-w-7xl">
         {/* Header */}
-        <div className="text-center space-y-4 mb-16 md:mb-24">
+        <div className="text-center space-y-4 mb-16 md:mb-24 translate-x-28">
           <h2 className="text-4xl md:text-5xl font-bold">How It Works</h2>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
             Advanced RAG technology with Llama 2 to deliver accurate, contextual answers
@@ -47,20 +47,20 @@ export function HowItWorksSection() {
         </div>
 
         {/* Steps */}
-        <div className="grid md:grid-cols-4 gap-6 md:gap-4">
+        <div className="grid md:grid-cols-4 gap-22 md:gap-22">
           {steps.map((step, index) => {
             const Icon = step.icon;
             return (
-              <div key={index} className="relative">
+              <div key={index} className="relative translate-x-12">
                 {/* Connection arrow */}
                 {index < steps.length - 1 && (
-                  <div className="hidden md:flex absolute -right-8 top-1/4 z-0">
-                    <ArrowRight className="w-6 h-6 text-primary/30" />
+                  <div className="hidden md:flex absolute -right-33 top-[45%] z-0 scale-150 scale-x-200">
+                    <ArrowRight className="w-6 h-6 text-primary/40" />
                   </div>
                 )}
 
                 {/* Card with glassmorphism */}
-                <div className="relative z-10 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 md:p-8 h-full hover:bg-white/15 hover:border-primary/50 transition-all duration-300 group">
+                <div className="relative z-10 bg-white/10 backdrop-blur-md border border-gray-250 rounded-2xl p-10 md:p-6 h-full hover:bg-white/15 hover:border-primary/60 transition-all duration-300 group translate-x-20 shadow-lg">
                   {/* Step number circle */}
                   <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-primary to-accent text-white font-bold mb-4 group-hover:shadow-lg group-hover:shadow-primary/50 transition-all">
                     {step.number}
@@ -81,7 +81,7 @@ export function HowItWorksSection() {
         </div>
 
         {/* Technology Stack */}
-        <div className="mt-20 md:mt-32 p-8 md:p-12 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20">
+        <div className="mt-20 md:mt-32 p-8 md:p-12 rounded-2xl bg-white/10 backdrop-blur-md border border-grey-20 translate-x-25 shadow-sm">
           <h3 className="text-2xl font-bold mb-6 text-foreground text-center">Technology Stack</h3>
           <div className="grid md:grid-cols-3 gap-8">
             <div className="text-center">

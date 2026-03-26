@@ -55,13 +55,13 @@ export default function Home() {
               <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center pt-4 md:pt-8">
                 <Button
                   size="lg"
-                  className="bg-gradient-to-r from-primary to-accent hover:shadow-lg hover:shadow-primary/50 text-white font-semibold h-12 md:h-14 px-6 md:px-8 transition-all duration-300 cursor-pointer"
+                  className="bg-gradient-to-r from-primary to-accent hover:shadow-lg hover:shadow-primary/50 text-white font-semibold h-12 md:h-14 px-6 md:px-8 transition-all duration-300 cursor-pointer shadow-lg"
                 >
                   Start Chatting <ArrowRight className="ml-2 w-5 h-5" />
                 </Button>
                 <Button
                   size="lg"
-                  className="bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 hover:border-primary/50 text-foreground font-semibold h-12 md:h-14 px-6 md:px-8 transition-all duration-300 cursor-pointer"
+                  className="bg-white/10 backdrop-blur-md border border-grey-250 hover:bg-white/20 hover:border-primary/60 text-foreground font-semibold h-12 md:h-14 px-6 md:px-8 transition-all duration-300 cursor-pointer shadow-lg"
                 >
                   Learn More
                 </Button>
@@ -73,14 +73,14 @@ export default function Home() {
         {/* Features Section */}
         <section className="py-20 md:py-32">
           <div className="container px-4 max-w-7xl">
-            <div className="text-center space-y-4 mb-16 md:mb-20">
+            <div className="text-center space-y-4 mb-16 md:mb-20 translate-x-28">
               <h2 className="text-4xl md:text-5xl font-bold">Why Choose RegInfo</h2>
               <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
                 Powerful features designed for your needs
               </p>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-6 md:gap-8">
+            <div className="grid md:grid-cols-3 gap-20 md:gap-20 translate-x-22">
               {[
                 {
                   icon: Zap,
@@ -102,7 +102,7 @@ export default function Home() {
                 return (
                   <div
                     key={i}
-                    className="p-6 md:p-8 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/15 hover:border-primary/50 transition-all duration-300 group"
+                    className="p-6 md:p-8 rounded-2xl bg-white/10 backdrop-blur-md border border-grey-250 hover:bg-white/15 hover:border-primary/60 transition-all duration-300 group shadow-lg"
                   >
                     <div className="w-12 h-12 rounded-lg bg-primary/20 flex items-center justify-center mb-4 md:mb-6 group-hover:scale-110 group-hover:bg-primary/30 transition-all">
                       <Icon className="w-6 h-6 text-primary" />
