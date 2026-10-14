@@ -32,14 +32,17 @@ export function LeadCaptureForm({ onSuccess }: LeadCaptureFormProps) {
     e.preventDefault();
 
     if (!formData.name || !formData.email || !formData.company) {
-      toast.error('Please fill in all required fields');
+      toast.error('Please fill in all required fields', {
+        position: 'top-right',
+        duration: 1500
+      });
       return;
     }
 
     setIsLoading(true);
 
     try {
-      // Store in localStorage for chat session
+      // Store in sessionStorage for chat session (once per session)
       const newUser = {
         name: formData.name,
         email: formData.email,
@@ -48,30 +51,28 @@ export function LeadCaptureForm({ onSuccess }: LeadCaptureFormProps) {
         timestamp: new Date().toISOString(),
         id: Math.random().toString(36).substr(2, 9),
       };
-      localStorage.setItem('reginfo_current_user', JSON.stringify(newUser));
+      sessionStorage.setItem('reginfo_current_user', JSON.stringify(newUser));
 
       // Store in database/email service
-      const existingData = JSON.parse(localStorage.getItem('reginfo_leads') || '[]');
+      const existingData = JSON.parse(sessionStorage.getItem('reginfo_leads') || '[]');
       const newLead = {
         ...newUser,
         receiveUpdates: formData.receiveUpdates,
       };
       existingData.push(newLead);
-      localStorage.setItem('reginfo_leads', JSON.stringify(existingData));
+      sessionStorage.setItem('reginfo_leads', JSON.stringify(existingData));
 
-      // Send email notification via API
-      const response = await fetch('/api/send-email', {
+      // Send contact info to Brevo API (List ID 9)
+      const response = await fetch('/api/brevo/contact', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          type: 'lead',
           name: formData.name,
           email: formData.email,
           company: formData.company,
-          isRecruiter: formData.isRecruiter,
-          receiveUpdates: formData.receiveUpdates,
+          listId: 9,
         }),
       });
 
@@ -99,7 +100,7 @@ export function LeadCaptureForm({ onSuccess }: LeadCaptureFormProps) {
       {/* Name */}
       <div>
         <label htmlFor="name" className="block text-sm font-medium text-foreground mb-2">
-          Full Name *
+          Full Name <span className="text-red-400">*</span>
         </label>
         <Input
           id="name"
@@ -108,14 +109,14 @@ export function LeadCaptureForm({ onSuccess }: LeadCaptureFormProps) {
           onChange={handleChange}
           placeholder="John Doe"
           disabled={isLoading}
-          className="bg-white/10 backdrop-blur-md border-white/20 text-white placeholder:text-white/50 focus:border-primary"
+          className="bg-white/10 backdrop-blur-md border-primary/13 text-black placeholder:text-muted-foreground hover:bg-white/15 hover:border-primary/30 hover:shadow-sm focus:border-primary"
         />
       </div>
 
       {/* Email */}
       <div>
         <label htmlFor="email" className="block text-sm font-medium text-foreground mb-2">
-          Email Address *
+          Email Address <span className="text-red-400">*</span>
         </label>
         <Input
           id="email"
@@ -125,14 +126,14 @@ export function LeadCaptureForm({ onSuccess }: LeadCaptureFormProps) {
           onChange={handleChange}
           placeholder="john@example.com"
           disabled={isLoading}
-          className="bg-white/10 backdrop-blur-md border-white/20 text-white placeholder:text-white/50 focus:border-primary"
+          className="bg-white/10 backdrop-blur-md border-primary/13 text-black placeholder:text-muted-foreground hover:bg-white/15 hover:border-primary/30 hover:shadow-sm focus:border-primary"
         />
       </div>
 
       {/* Company */}
       <div>
         <label htmlFor="company" className="block text-sm font-medium text-foreground mb-2">
-          Company *
+          Company <span className="text-red-400">*</span>
         </label>
         <Input
           id="company"
@@ -141,7 +142,7 @@ export function LeadCaptureForm({ onSuccess }: LeadCaptureFormProps) {
           onChange={handleChange}
           placeholder="Your Company"
           disabled={isLoading}
-          className="bg-white/10 backdrop-blur-md border-white/20 text-white placeholder:text-white/50 focus:border-primary"
+          className="bg-white/10 backdrop-blur-md border-primary/13 text-black placeholder:text-muted-foreground hover:bg-white/20 hover:border-primary/40 hover:shadow-sm focus:border-primary"
         />
       </div>
 
@@ -155,6 +156,7 @@ export function LeadCaptureForm({ onSuccess }: LeadCaptureFormProps) {
             setFormData(prev => ({ ...prev, isRecruiter: checked as boolean, receiveUpdates: false }))
           }
           disabled={isLoading}
+          className="border-primary/16"
         />
         <label
           htmlFor="isRecruiter"
@@ -166,7 +168,7 @@ export function LeadCaptureForm({ onSuccess }: LeadCaptureFormProps) {
 
       {/* Receive Updates Checkbox - Only for Recruiters */}
       {formData.isRecruiter && (
-        <div className="flex items-center space-x-3 p-3 bg-primary/10 rounded-lg border border-primary/20">
+        <div className="flex items-center space-x-3 p-3 bg-primary/10 rounded-lg border border-white/20">
           <Checkbox
             id="receiveUpdates"
             name="receiveUpdates"
@@ -175,6 +177,7 @@ export function LeadCaptureForm({ onSuccess }: LeadCaptureFormProps) {
               setFormData(prev => ({ ...prev, receiveUpdates: checked as boolean }))
             }
             disabled={isLoading}
+            className='border-primary/15'
           />
           <label
             htmlFor="receiveUpdates"
@@ -193,6 +196,7 @@ export function LeadCaptureForm({ onSuccess }: LeadCaptureFormProps) {
       >
         {isLoading ? 'Submitting...' : 'Get Started'}
       </Button>
+
     </form>
   );
 }

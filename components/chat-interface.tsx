@@ -3,9 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { X, Send, LogOut } from 'lucide-react';
-import { toast } from 'sonner';
+import { X, Send } from 'lucide-react';
 
 interface Message {
   role: 'user' | 'bot' | 'system';
@@ -17,7 +15,10 @@ interface ChatInterfaceProps {
   initialMessage?: { role: string; message: string } | null;
   showFormMessage?: boolean;
   backendOnline?: boolean;
+  backendUrl?: string;
 }
+
+const QUERY_TIMEOUT_MS = Number(process.env.NEXT_PUBLIC_QUERY_TIMEOUT_MS) || 90000; // 90s default for Colab/Llama 2 inference
 
 const DEMO_RESPONSES = [
   "I can help you with property registration. What would you like to know?",
@@ -28,11 +29,27 @@ const DEMO_RESPONSES = [
   "Yes, we can help with all registration requirements. What can I assist with?",
 ];
 
-export function ChatInterface({ onClose, initialMessage, showFormMessage, backendOnline }: ChatInterfaceProps) {
+export function ChatInterface({ onClose, initialMessage, showFormMessage, backendOnline, backendUrl }: ChatInterfaceProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isOfflineMode, setIsOfflineMode] = useState(!backendUrl || !backendOnline);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const activeControllerRef = useRef<AbortController | null>(null);
+
+  // Sync offline mode if backend props change
+  useEffect(() => {
+    setIsOfflineMode(!backendUrl || !backendOnline);
+  }, [backendUrl, backendOnline]);
+
+  // Abort any ongoing request on unmount
+  useEffect(() => {
+    return () => {
+      if (activeControllerRef.current) {
+        activeControllerRef.current.abort('unmounted');
+      }
+    };
+  }, []);
 
   // Initialize chat
   useEffect(() => {
@@ -50,10 +67,10 @@ export function ChatInterface({ onClose, initialMessage, showFormMessage, backen
         role: 'system',
         message: initialMessage.message,
       });
-      if (!backendOnline) {
+      if (!backendOnline || isOfflineMode) {
         initialMessages.push({
           role: 'system',
-          message: '⚠️ The backend is currently offline. Check out the demo video to see how it works. You can still explore the UI.',
+          message: '⚠️ The backend is currently offline. You can still explore the assistant using demo responses.',
         });
       }
     } else {
@@ -88,17 +105,102 @@ export function ChatInterface({ onClose, initialMessage, showFormMessage, backen
     setInputValue('');
     setIsLoading(true);
 
-    // Simulate bot response delay
-    setTimeout(() => {
+    // Cancel any previous in-flight request
+    if (activeControllerRef.current) {
+      activeControllerRef.current.abort('superseded');
+    }
+
+    const controller = new AbortController();
+    activeControllerRef.current = controller;
+    let isTimedOut = false;
+
+    try {
+      if (backendUrl && !isOfflineMode) {
+        const timeoutId = setTimeout(() => {
+          isTimedOut = true;
+          controller.abort(new DOMException('Query request timed out', 'TimeoutError'));
+        }, QUERY_TIMEOUT_MS);
+
+        const res = await fetch(`${backendUrl}/query`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'ngrok-skip-browser-warning': 'true',
+          },
+          body: JSON.stringify({
+            question: userMessage.message,
+            query: userMessage.message,
+          }),
+          signal: controller.signal,
+        });
+
+        clearTimeout(timeoutId);
+
+        if (res.ok) {
+          const contentType = res.headers.get('content-type') || '';
+          if (contentType.includes('application/json')) {
+            const data = await res.json();
+            const botReply =
+              data.response || data.answer || data.message || data.text || JSON.stringify(data);
+            setMessages((prev) => [...prev, { role: 'bot', message: botReply }]);
+          } else {
+            const text = await res.text();
+            setMessages((prev) => [...prev, { role: 'bot', message: text || 'Received empty response from backend.' }]);
+          }
+        } else {
+          let errDetail = `Status ${res.status}`;
+          try {
+            const errText = await res.text();
+            if (errText && !errText.includes('<!DOCTYPE html>')) {
+              errDetail = errText.slice(0, 100);
+            }
+          } catch {
+            // ignore
+          }
+          throw new Error(`Backend responded with ${errDetail}`);
+        }
+      } else {
+        // Offline / demo mode — simulate responsive typing delay
+        await new Promise((resolve) => setTimeout(resolve, 600));
+        const randomResponse =
+          DEMO_RESPONSES[Math.floor(Math.random() * DEMO_RESPONSES.length)];
+        setMessages((prev) => [...prev, { role: 'bot', message: randomResponse }]);
+      }
+    } catch (error: any) {
+      if (controller.signal.reason === 'unmounted' || controller.signal.reason === 'superseded') {
+        return;
+      }
+
+      // Automatically switch to offline mode so subsequent messages respond instantly
+      setIsOfflineMode(true);
+
+      const isTimeout =
+        isTimedOut ||
+        error?.name === 'TimeoutError' ||
+        error?.name === 'AbortError' ||
+        controller.signal.aborted;
+
+      if (isTimeout) {
+        console.warn(`Chat query timed out after ${QUERY_TIMEOUT_MS / 1000}s`);
+      } else {
+        console.warn('Backend unavailable, switched to offline demo mode:', error?.message || error);
+      }
+
+      const errorPrefix = isTimeout
+        ? '⏱️ Request timed out (backend is busy or offline).'
+        : '⚠️ Backend is offline.';
       const randomResponse =
         DEMO_RESPONSES[Math.floor(Math.random() * DEMO_RESPONSES.length)];
-      const botMessage: Message = {
-        role: 'bot',
-        message: randomResponse,
-      };
-      setMessages((prev) => [...prev, botMessage]);
+      setMessages((prev) => [
+        ...prev,
+        { role: 'bot', message: `${errorPrefix} Switched to demo mode: ${randomResponse}` },
+      ]);
+    } finally {
+      if (activeControllerRef.current === controller) {
+        activeControllerRef.current = null;
+      }
       setIsLoading(false);
-    }, 800);
+    }
   };
 
   return (
@@ -107,7 +209,7 @@ export function ChatInterface({ onClose, initialMessage, showFormMessage, backen
       <div className="border-b border-border px-4 py-3 flex items-center justify-between flex-shrink-0">
         <div>
           <h3 className="font-semibold text-foreground text-sm">RegInfo Assistant</h3>
-          <p className="text-xs text-muted-foreground">{backendOnline ? 'Ready' : 'Offline Mode'}</p>
+          <p className="text-xs text-muted-foreground">{!isOfflineMode ? 'Ready' : 'Offline Mode (Demo)'}</p>
         </div>
         <Button
           variant="ghost"

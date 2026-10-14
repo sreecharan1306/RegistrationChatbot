@@ -110,12 +110,10 @@ pnpm start
 
 ### Chat Interface
 - Real-time chat with AI backend
-- Backend health check with 5s timeout
-- 10-second query timeout
-- Chat history stored in sessionStorage
+- 15-second query timeout with graceful fallback
+- Demo responses when backend is offline
+- Chat history within session
 - User greeting with name personalization
-- Feedback buttons (thumbs up/down)
-- Clear chat and end session options
 
 ### Landing Page Sections
 1. **Navbar** - Logo, brand name, book demo button
@@ -146,7 +144,6 @@ components/
 lib/
 ├── validation.ts           # Form validation utilities
 ├── session.ts              # SessionStorage management
-├── backend-health.ts       # Backend API integration
 └── brevo.ts                # Brevo email/CRM integration
 ```
 

@@ -26,24 +26,26 @@ export function ContactForm() {
     e.preventDefault();
     
     if (!formData.name || !formData.email || !formData.message) {
-      toast.error('Please fill in all fields');
+      toast.error('Please fill in all fields',{
+        position: 'top-right',
+        duration: 1500
+      });
       return;
     }
 
     setIsLoading(true);
 
     try {
-      // Send email via Brevo
-      const response = await fetch('/api/send-email', {
+      // Send contact to Brevo (List ID 10)
+      const response = await fetch('/api/brevo/contact', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          to: process.env.NEXT_PUBLIC_CONTACT_EMAIL,
           name: formData.name,
           email: formData.email,
-          message: formData.message,
+          listId: 10,
         }),
       });
 
@@ -74,7 +76,7 @@ export function ContactForm() {
           onChange={handleChange}
           placeholder="Your name"
           disabled={isLoading}
-          className="bg-white/10 backdrop-blur-md border-white/20 text-white placeholder:text-white/50 focus:border-primary"
+          className="bg-white/10 backdrop-blur-md border-primary/13 text-black placeholder:text-muted-foreground focus:border-primary hover:bg-white/15 hover:border-primary/30 hover:shadow-sm"
         />
       </div>
 
@@ -90,7 +92,7 @@ export function ContactForm() {
           onChange={handleChange}
           placeholder="your@email.com"
           disabled={isLoading}
-          className="bg-white/10 backdrop-blur-md border-white/20 text-white placeholder:text-white/50 focus:border-primary"
+          className="bg-white/10 backdrop-blur-md border-primary/13 text-black placeholder:text-muted-foreground focus:border-primary hover:bg-white/15 hover:border-primary/30 hover:shadow-sm"
         />
       </div>
 
@@ -106,7 +108,7 @@ export function ContactForm() {
           placeholder="Your message..."
           disabled={isLoading}
           rows={4}
-          className="bg-white/10 backdrop-blur-md border border-white/20 text-foreground placeholder:text-muted-foreground focus:border-primary min-h-32 resize-none w-full"
+          className="bg-white/10 backdrop-blur-md border border-primary/13 text-foreground placeholder:text-muted-foreground focus:border-primary min-h-32 resize-none w-fullhover:bg-white/15 hover:border-primary/30 hover:shadow-sm"
         />
       </div>
 
