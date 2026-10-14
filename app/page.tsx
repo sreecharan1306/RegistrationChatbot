@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Footer } from '@/components/footer';
 import { FloatingChatbot } from '@/components/floating-chatbot';
 import { ContactForm } from '@/components/contact-form';
@@ -53,15 +55,20 @@ export default function Home() {
 
               {/* CTA Buttons */}
               <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center pt-4 md:pt-8">
+                <Link href="/chatbot">
+                  <Button
+                    size="lg"
+                    className="bg-gradient-to-r from-primary to-accent hover:shadow-lg hover:shadow-primary/50 text-white font-semibold h-12 md:h-14 px-6 md:px-8 transition-all duration-300 cursor-pointer shadow-lg w-full sm:w-auto"
+                  >
+                    Start Chatting <ArrowRight className="ml-2 w-5 h-5" />
+                  </Button>
+                </Link>
                 <Button
                   size="lg"
-                  className="bg-gradient-to-r from-primary to-accent hover:shadow-lg hover:shadow-primary/50 text-white font-semibold h-12 md:h-14 px-6 md:px-8 transition-all duration-300 cursor-pointer shadow-lg"
-                >
-                  Start Chatting <ArrowRight className="ml-2 w-5 h-5" />
-                </Button>
-                <Button
-                  size="lg"
-                  className="bg-white/10 backdrop-blur-md border border-grey-250 hover:bg-white/20 hover:border-primary/60 text-foreground font-semibold h-12 md:h-14 px-6 md:px-8 transition-all duration-300 cursor-pointer shadow-lg"
+                  onClick={() => {
+                    document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  className="bg-white/10 backdrop-blur-md border border-grey-250 hover:bg-white/20 hover:border-primary/60 text-foreground font-semibold h-12 md:h-14 px-6 md:px-8 transition-all duration-300 cursor-pointer shadow-lg w-full sm:w-auto"
                 >
                   Learn More
                 </Button>
@@ -72,15 +79,15 @@ export default function Home() {
 
         {/* Features Section */}
         <section className="py-20 md:py-32">
-          <div className="container px-4 max-w-7xl">
-            <div className="text-center space-y-4 mb-16 md:mb-20 translate-x-28">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+            <div className="text-center space-y-4 mb-12 md:mb-20">
               <h2 className="text-4xl md:text-5xl font-bold">Why Choose RegInfo</h2>
               <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
                 Powerful features designed for your needs
               </p>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-20 md:gap-20 translate-x-22">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
               {[
                 {
                   icon: Zap,
@@ -102,13 +109,13 @@ export default function Home() {
                 return (
                   <div
                     key={i}
-                    className="p-6 md:p-8 rounded-2xl bg-white/10 backdrop-blur-md border border-grey-250 hover:bg-white/15 hover:border-primary/60 transition-all duration-300 group shadow-lg"
+                    className="p-6 md:p-8 rounded-2xl bg-white/10 backdrop-blur-md border border-white/15 hover:bg-white/15 hover:border-primary/60 transition-all duration-300 group shadow-lg flex flex-col"
                   >
-                    <div className="w-12 h-12 rounded-lg bg-primary/20 flex items-center justify-center mb-4 md:mb-6 group-hover:scale-110 group-hover:bg-primary/30 transition-all">
+                    <div className="w-12 h-12 rounded-lg bg-primary/20 flex items-center justify-center mb-4 md:mb-6 group-hover:scale-110 group-hover:bg-primary/30 transition-all shrink-0">
                       <Icon className="w-6 h-6 text-primary" />
                     </div>
                     <h3 className="text-lg md:text-xl font-semibold mb-2 md:mb-3">{feature.title}</h3>
-                    <p className="text-muted-foreground text-sm md:text-base">{feature.description}</p>
+                    <p className="text-muted-foreground text-sm md:text-base leading-relaxed">{feature.description}</p>
                   </div>
                 );
               })}
@@ -121,9 +128,9 @@ export default function Home() {
 
         {/* Lead Capture Section */}
         {!hasUserData && (
-          <section className="py-20 md:py-32 bg-gradient-to-b from-primary/5 via-transparent to-transparent" data-form-section>
-            <div className="container px-4 w-full">
-              <div className="max-w-2xl mx-auto">
+          <section className="py-20 md:py-32 bg-gradient-to-b from-primary/5 via-transparent to-transparent flex justify-center items-center w-full" data-form-section>
+            <div className="container px-4 mx-auto w-full flex flex-col items-center">
+              <div className="max-w-2xl w-full mx-auto">
                 <div className="text-center space-y-4 mb-12 md:mb-16">
                   <h2 className="text-4xl md:text-5xl font-bold">Get Started</h2>
                   <p className="text-muted-foreground text-base md:text-lg">
@@ -131,7 +138,7 @@ export default function Home() {
                   </p>
                 </div>
 
-                <div className="bg-white/10 backdrop-blur-md border border-primary/20 rounded-2xl p-8 md:p-12 shadow-sm">
+                <div className="bg-white/10 backdrop-blur-md border border-primary/20 rounded-2xl p-6 sm:p-8 md:p-12 shadow-sm">
                   <LeadCaptureForm onSuccess={() => setHasUserData(true)} />
                 </div>
               </div>
@@ -140,9 +147,9 @@ export default function Home() {
         )}
 
         {/* Contact Section */}
-        <section className="py-20 md:py-32">
-          <div className="container px-4 w-full">
-            <div className="max-w-2xl mx-auto">
+        <section className="py-20 md:py-32 flex justify-center items-center w-full">
+          <div className="container px-4 mx-auto w-full flex flex-col items-center">
+            <div className="max-w-2xl w-full mx-auto">
               <div className="text-center space-y-4 mb-12 md:mb-16">
                 <h2 className="text-4xl md:text-5xl font-bold">Have Questions?</h2>
                 <p className="text-muted-foreground text-base md:text-lg">
@@ -150,7 +157,7 @@ export default function Home() {
                 </p>
               </div>
 
-              <div className="bg-white/10 backdrop-blur-md border border-primary/20 rounded-2xl p-8 md:p-12 shadow-sm">
+              <div className="bg-white/10 backdrop-blur-md border border-primary/20 rounded-2xl p-6 sm:p-8 md:p-12 shadow-sm">
                 <ContactForm />
               </div>
             </div>
@@ -158,9 +165,9 @@ export default function Home() {
         </section>
 
         {/* Demo Video Section */}
-        <section id="demo-video" className="py-20 md:py-32 bg-gradient-to-b from-transparent to-primary/5">
-          <div className="container px-4 w-full">
-            <div className="max-w-3xl mx-auto">
+        <section id="demo-video" className="py-20 md:py-32 bg-gradient-to-b from-transparent to-primary/5 flex justify-center items-center w-full">
+          <div className="container flex flex-col items-center  px-4 ">
+            <div className="mx-auto">
               <div className="text-center space-y-6 mb-12">
                 <h2 className="text-4xl md:text-5xl font-bold">See It In Action</h2>
                 <p className="text-muted-foreground text-base md:text-lg">
@@ -194,7 +201,7 @@ export default function Home() {
         </section>
       </main>
 
-      <Footer />
+      {/* <Footer /> */}
 
       {/* Floating Chatbot */}
       <FloatingChatbot />

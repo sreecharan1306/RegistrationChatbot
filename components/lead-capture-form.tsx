@@ -42,7 +42,7 @@ export function LeadCaptureForm({ onSuccess }: LeadCaptureFormProps) {
     setIsLoading(true);
 
     try {
-      // Store in localStorage for chat session
+      // Store in sessionStorage for chat session (once per session)
       const newUser = {
         name: formData.name,
         email: formData.email,
@@ -51,30 +51,28 @@ export function LeadCaptureForm({ onSuccess }: LeadCaptureFormProps) {
         timestamp: new Date().toISOString(),
         id: Math.random().toString(36).substr(2, 9),
       };
-      localStorage.setItem('reginfo_current_user', JSON.stringify(newUser));
+      sessionStorage.setItem('reginfo_current_user', JSON.stringify(newUser));
 
       // Store in database/email service
-      const existingData = JSON.parse(localStorage.getItem('reginfo_leads') || '[]');
+      const existingData = JSON.parse(sessionStorage.getItem('reginfo_leads') || '[]');
       const newLead = {
         ...newUser,
         receiveUpdates: formData.receiveUpdates,
       };
       existingData.push(newLead);
-      localStorage.setItem('reginfo_leads', JSON.stringify(existingData));
+      sessionStorage.setItem('reginfo_leads', JSON.stringify(existingData));
 
-      // Send email notification via API
-      const response = await fetch('/api/send-email', {
+      // Send contact info to Brevo API (List ID 9)
+      const response = await fetch('/api/brevo/contact', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          type: 'lead',
           name: formData.name,
           email: formData.email,
           company: formData.company,
-          isRecruiter: formData.isRecruiter,
-          receiveUpdates: formData.receiveUpdates,
+          listId: 9,
         }),
       });
 

@@ -36,17 +36,16 @@ export function ContactForm() {
     setIsLoading(true);
 
     try {
-      // Send email via Brevo
-      const response = await fetch('/api/send-email', {
+      // Send contact to Brevo (List ID 10)
+      const response = await fetch('/api/brevo/contact', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          to: process.env.NEXT_PUBLIC_CONTACT_EMAIL,
           name: formData.name,
           email: formData.email,
-          message: formData.message,
+          listId: 10,
         }),
       });
 
