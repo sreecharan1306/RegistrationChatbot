@@ -168,7 +168,7 @@ export default function Home() {
         <section id="demo-video" className="py-20 md:py-32 bg-gradient-to-b from-transparent to-primary/5 flex justify-center items-center w-full">
           <div className="container flex flex-col items-center  px-4 ">
             <div className="mx-auto">
-              <div className="text-center space-y-6 mb-12">
+              {/* <div className="text-center space-y-6 mb-12">
                 <h2 className="text-4xl md:text-5xl font-bold">See It In Action</h2>
                 <p className="text-muted-foreground text-base md:text-lg">
                   Watch a demo of RegInfo in action to understand how it works
@@ -189,7 +189,7 @@ export default function Home() {
                     </div>
                   </div>
                 </div>
-              </div>
+              </div> */}
 
               <div className="mt-8 p-4 md:p-6 bg-yellow-50 border border-yellow-200 rounded-lg">
                 <p className="text-sm text-yellow-900">
